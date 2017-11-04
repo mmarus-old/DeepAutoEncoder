@@ -86,7 +86,7 @@ public class Network implements Serializable {
         //TODO: skontrolovat velkost vektoru vs topology
         int count = 0;
         totalError = 1;
-        while (totalError > 0.5 && count <= cycles) {
+        while (totalError > 0.9 && count <= cycles) {
             totalError = 0;
             data.getData().forEach(vector -> {
                 addInput(vector.getValues());

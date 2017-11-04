@@ -76,7 +76,7 @@ public class MainScreenJavaFx extends Application {
         stage.setHeight(200);
         stage.setScene(scene);
         stage.sizeToScene();
-        train("batman-24x24.jpg");
+        train("batman-50x50.jpg");
         stage.show();
     }
 

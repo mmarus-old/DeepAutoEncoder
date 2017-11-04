@@ -24,6 +24,7 @@ public class Util {
         ArrayList<Integer> topology = new ArrayList<>();
         topology.add(Integer.valueOf(data.getData().get(0).getValues().size()));
         topology.add(Integer.valueOf( data.getData().get(0).getValues().size() / 2));
+        topology.add(Integer.valueOf( data.getData().get(0).getValues().size() / 2));
         topology.add(Integer.valueOf(data.getData().get(0).getValues().size()));
 
         Network net = new Network(topology);
