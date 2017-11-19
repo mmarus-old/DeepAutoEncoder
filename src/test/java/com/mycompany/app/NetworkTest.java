@@ -1,7 +1,7 @@
 package com.mycompany.app;
 
 import com.mycompany.app.NN.Network;
-import com.mycompany.app.NN.Util;
+import com.mycompany.app.util.Rand;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class NetworkTest {
         float max = (float) (3/sqrt(100));
 
         for (int i = 0; i < 20; i++) {
-            float randNum = Util.randomFloatBetween(min, max);
+            float randNum = Rand.randomFloatBetween(min, max);
             logger.log(Level.INFO, String.valueOf(randNum));
             assertTrue(randNum >= min && randNum <= max);
         }

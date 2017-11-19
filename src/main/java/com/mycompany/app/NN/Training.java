@@ -26,17 +26,12 @@ public class Training extends Thread{
         this.buttonsBox = buttonsBox;
     }
 
-
     public void setTestTab(Tab testTab) {
         this.testTab = testTab;
     }
 
     public void setNet(Network net) {
         this.net = net;
-    }
-
-    public Data getData() {
-        return data;
     }
 
     public void setData(Data data) {

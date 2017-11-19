@@ -3,13 +3,13 @@ package com.mycompany.app.NN;
 import com.mycompany.app.Data.Data;
 import com.mycompany.app.Data.Vector;
 import com.mycompany.app.util.Image;
+import com.mycompany.app.util.Rand;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,8 +22,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static java.lang.Math.sqrt;
 
 /**
  * Created by Marek Marusic <mmarusic@redhat.com> on 10/19/17.
@@ -76,28 +74,6 @@ public class Network implements Serializable {
         }
 
     }
-
-//    public void train(ArrayList<int[]> images) {
-//        //TODO: skontrolovat velkost vektoru vs topology
-//        int count = 0;
-//        totalError = 1;
-//        while (totalError > 0.02 && count <= cycles) {
-//            totalError = 0;
-//            images.forEach(vector -> {
-//                ArrayList<Double> doubleVector = Arrays.asList(vector);
-//                addInput(vector.getValues());
-//                addOutput(vector.getValues());
-//                feedForward();
-//                calculateError();
-//                calculateDeltas();
-//                backPropagation();
-//            });
-//
-//            if(count % 1000 == 0)
-//                System.out.println("cycle: " +count+" error: "+ String.format( "%.5f", totalError ) );
-//            count++;
-//        }
-//    }
 
     public void train(Data data, HBox outputImgHBox) {
         outputImgHBox.setSpacing(2);
@@ -174,8 +150,8 @@ public class Network implements Serializable {
             float actual = getOutputValueAt(i);
             difference = expected - actual;
             outputError += 0.5 * difference * difference;
-            float delta = (difference) * Util.lambda * getOutputValueAt(i) * (1 - getOutputValueAt(i));
-//            float delta = Util.lambda * (1 - getOutputValueAt(i) * getOutputValueAt(i));
+            float delta = (difference) * Rand.lambda * getOutputValueAt(i) * (1 - getOutputValueAt(i));
+//            float delta = Rand.lambda * (1 - getOutputValueAt(i) * getOutputValueAt(i));
             getOutputLayer().getNeuron(i).setDelta(delta);
             int iiii = 1;
         }
@@ -194,7 +170,7 @@ public class Network implements Serializable {
                 }
 
                 currnetLayer.getNeuron(n).setDelta(
-                        sum * Util.lambda * currnetLayer.getNeuron(n).getOutput() * (1 - currnetLayer.getNeuron(n).getOutput()));
+                        sum * Rand.lambda * currnetLayer.getNeuron(n).getOutput() * (1 - currnetLayer.getNeuron(n).getOutput()));
             }
         }
     }

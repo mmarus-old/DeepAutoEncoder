@@ -1,8 +1,7 @@
 package com.mycompany.app.Data;
 
-import com.mycompany.app.NN.Util;
+import com.mycompany.app.util.Rand;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
@@ -52,7 +51,7 @@ public class Data {
     private Vector generateRandomVector() {
         Vector vect = new Vector();
         for (int i = 0; i < vectorSize; i++) {
-            vect.addValue(Util.randomIntBetween(0,1));
+            vect.addValue(Rand.randomIntBetween(0,1));
         }
         return vect;
     }

@@ -1,5 +1,7 @@
 package com.mycompany.app.NN;
 
+import com.mycompany.app.util.Rand;
+
 import java.io.Serializable;
 
 import static java.lang.Math.sqrt;
@@ -25,7 +27,7 @@ public class Neuron  implements Serializable {
         deltaWeights = new float[outputs+1];
         this.myIndex = myIndex;
         for (int i = 0; i < outputs+1; i++ )
-            weights[i] = Util.randomFloatBetween(-max, max);
+            weights[i] = Rand.randomFloatBetween(-max, max);
 
     }
 
@@ -43,10 +45,10 @@ public class Neuron  implements Serializable {
 
     public float activationFunction(float u) {
         // sigmoid funkcia - hyperbolicky tangens
-//        return tanh(Util.lambda * u);
-        double pow = Math.exp( -(Util.lambda) * u);
+//        return tanh(Rand.lambda * u);
+        double pow = Math.exp( -(Rand.lambda) * u);
         float res = (float) 1/(1+ (float) pow);
-//        float res = (float) 1/(1+Math.exp( -(Util.lambda) * u));
+//        float res = (float) 1/(1+Math.exp( -(Rand.lambda) * u));
         return res;
     }
 
@@ -73,7 +75,7 @@ public class Neuron  implements Serializable {
 
     public void updateWeightDelta(Layer prevLayer) {
         for(int n = 1; n < prevLayer.getNeurons().size(); n++) {
-            float deltaWeight = Util.micro * delta * prevLayer.getNeuron(n).getOutput();
+            float deltaWeight = Rand.micro * delta * prevLayer.getNeuron(n).getOutput();
             prevLayer.getNeuron(n).setDeltaWeight(myIndex, deltaWeight);
             prevLayer.getNeuron(n).updateWeight(myIndex);
         }

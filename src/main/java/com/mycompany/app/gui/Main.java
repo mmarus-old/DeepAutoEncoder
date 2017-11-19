@@ -19,7 +19,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
         Logger rootLog = Logger.getLogger("");
         rootLog.setLevel( Level.INFO );

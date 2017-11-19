@@ -11,14 +11,12 @@ public class Layer  implements Serializable {
 
     private ArrayList<Neuron> neurons = new ArrayList<>();
 
-
     public Layer(Integer neuronCount, Integer neuronOutputCount) {
         addBias(neuronOutputCount);
 
         for (int i = 1; i <= neuronCount.intValue(); i++) {
             neurons.add(new Neuron(i, neuronOutputCount.intValue()));
         }
-
     }
 
     public void addBias(Integer neuronOutputCount) {
