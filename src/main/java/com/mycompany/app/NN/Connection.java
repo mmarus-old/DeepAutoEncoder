@@ -10,28 +10,30 @@ import static java.lang.Math.sqrt;
 public class Connection  implements Serializable {
     private static final long serialVersionUID = -5870427198177519107L;
 
-    private double weight;
-    private double deltaWeight;
+    private float weight;
+    private float deltaWeight;
 
 
-    public double getWeight() {
+
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 
-    public double getDeltaWeight() {
+    public float getDeltaWeight() {
         return deltaWeight;
     }
 
-    public void setDeltaWeight(double deltaWeight) {
+    public void setDeltaWeight(float deltaWeight) {
         this.deltaWeight = deltaWeight;
     }
 
     public Connection(int outputs) {
-        weight = Util.randomDoubleBetween(-(3/sqrt(outputs)), (3/sqrt(outputs)));
+        float min = (float) (3/sqrt(outputs));
+        weight = Util.randomFloatBetween(-min, min);
     }
 
     public void updateWeight() {

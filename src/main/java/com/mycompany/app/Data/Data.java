@@ -2,6 +2,7 @@ package com.mycompany.app.Data;
 
 import com.mycompany.app.NN.Util;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
@@ -12,6 +13,33 @@ public class Data {
 
     ArrayList<Vector> data = new ArrayList<>();
     private int vectorSize = 0;
+
+    public int getVectorSize() {
+        return vectorSize;
+    }
+
+    public void setVectorSize(int vectorSize) {
+        this.vectorSize = vectorSize;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    int height = 0;
+    int width = 0;
 
     public Data(int vectorSize) { this.vectorSize = vectorSize; }
 
@@ -33,7 +61,7 @@ public class Data {
         return data;
     }
 
-    public void addVector(ArrayList<Double> imageAsDoubles) {
-        data.add(new Vector(imageAsDoubles));
+    public void addVector(ArrayList<Float> imageAsFloats) {
+        data.add(new Vector(imageAsFloats));
     }
 }

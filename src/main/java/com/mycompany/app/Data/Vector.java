@@ -7,13 +7,13 @@ import java.util.ArrayList;
  */
 public class Vector {
 
-    ArrayList<Double> values;
+    ArrayList<Float> values;
 
     public Vector(){
         values = new ArrayList<>();
     }
 
-    public Vector(ArrayList<Double> values) {
+    public Vector(ArrayList<Float> values) {
         this.values = values;
     }
 
@@ -25,17 +25,17 @@ public class Vector {
         }
         Vector vect = new Vector();
         for (int i = 0; i < parts.length; i++) {
-            vect.values.add(Double.valueOf(parts[i]));
+            vect.values.add(Float.valueOf(parts[i]));
         }
 
         return vect;
     }
 
-    public void addValue(double val) {
-        values.add(Double.valueOf(val));
+    public void addValue(float val) {
+        values.add(Float.valueOf(val));
     }
 
-    public ArrayList<Double> getValues() {
+    public ArrayList<Float> getValues() {
         return values;
     }
 
