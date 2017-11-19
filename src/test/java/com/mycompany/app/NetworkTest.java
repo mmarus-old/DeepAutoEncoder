@@ -20,8 +20,8 @@ public class NetworkTest {
 
     @Test
     public void calculateOutput() {
-        ArrayList<Double> inputVals = new ArrayList<>(Arrays.asList(Double.valueOf(0.05), Double.valueOf(0.1)));
-        ArrayList<Double> outputVals = new ArrayList<>(Arrays.asList(Double.valueOf(0.01), Double.valueOf(0.99)));
+        ArrayList<Float> inputVals = new ArrayList<>(Arrays.asList(Float.valueOf(0.05f), Float.valueOf(0.1f)));
+        ArrayList<Float> outputVals = new ArrayList<>(Arrays.asList(Float.valueOf(0.01f), Float.valueOf(0.99f)));
 
         Network net = generateNetwork();
         net.addInput(inputVals);
@@ -54,24 +54,24 @@ public class NetworkTest {
         topology.add(2);
 
         Network net = new Network(topology);
-        net.getLayers().get(0).getNeuron(0).setWeight(1, .35);
-        net.getLayers().get(0).getNeuron(0).setWeight(2, .35);
+        net.getLayers().get(0).getNeuron(0).setWeight(1, 0.35f);
+        net.getLayers().get(0).getNeuron(0).setWeight(2, .35f);
 
-        net.getLayers().get(0).getNeuron(1).setWeight(1,.15);
-        net.getLayers().get(0).getNeuron(1).setWeight(2,.25);
+        net.getLayers().get(0).getNeuron(1).setWeight(1,.15f);
+        net.getLayers().get(0).getNeuron(1).setWeight(2,.25f);
 
-        net.getLayers().get(0).getNeuron(2).setWeight(1, .20);
-        net.getLayers().get(0).getNeuron(2).setWeight(2,.30);
+        net.getLayers().get(0).getNeuron(2).setWeight(1, .20f);
+        net.getLayers().get(0).getNeuron(2).setWeight(2,.30f);
 
 
-        net.getLayers().get(1).getNeuron(0).setWeight(1,.60);
-        net.getLayers().get(1).getNeuron(0).setWeight(2,.60);
+        net.getLayers().get(1).getNeuron(0).setWeight(1,.60f);
+        net.getLayers().get(1).getNeuron(0).setWeight(2,.60f);
 
-        net.getLayers().get(1).getNeuron(1).setWeight(1,.40);
-        net.getLayers().get(1).getNeuron(1).setWeight(2,.50);
+        net.getLayers().get(1).getNeuron(1).setWeight(1,.40f);
+        net.getLayers().get(1).getNeuron(1).setWeight(2,.50f);
 
-        net.getLayers().get(1).getNeuron(2).setWeight(1,.45);
-        net.getLayers().get(1).getNeuron(2).setWeight(2,.55);
+        net.getLayers().get(1).getNeuron(2).setWeight(1,.45f);
+        net.getLayers().get(1).getNeuron(2).setWeight(2,.55f);
 
         return net;
     }
@@ -98,10 +98,13 @@ public class NetworkTest {
 
     @Test
     public void randomCreation() {
+        float min = (float) -(3/sqrt(100));
+        float max = (float) (3/sqrt(100));
+
         for (int i = 0; i < 20; i++) {
-            double randNum = Util.randomDoubleBetween(-(3/sqrt(100)), (3/sqrt(100)));
+            float randNum = Util.randomFloatBetween(min, max);
             logger.log(Level.INFO, String.valueOf(randNum));
-            assertTrue(randNum >= -(3/sqrt(100)) && randNum <= (3/sqrt(100)));
+            assertTrue(randNum >= min && randNum <= max);
         }
     }
 

@@ -11,73 +11,79 @@ public class Neuron  implements Serializable {
     private static final long serialVersionUID = -5364263379896718318L;
 
     int myIndex;
-    double output;
-    double[] weights = null;
-    double[] deltaWeights = null;
-    double delta;
+    float output;
+    float[] weights = null;
+    float[] deltaWeights = null;
+    float delta;
 
 
     public Neuron(int myIndex, int outputs) {
-        weights = new double[outputs+1];
-        deltaWeights = new double[outputs+1];
+        float max = (float) (3/sqrt(outputs));
+        max = (max < 0.5 ) ? max : 0.5f;
+
+        weights = new float[outputs+1];
+        deltaWeights = new float[outputs+1];
         this.myIndex = myIndex;
         for (int i = 0; i < outputs+1; i++ )
-            weights[i] = Util.randomDoubleBetween(-(3/sqrt(outputs)), (3/sqrt(outputs)));
+            weights[i] = Util.randomFloatBetween(-max, max);
 
     }
 
     public void calculateOutput(Layer prevLayer) {
-        double u = 0;
+        float u = 0;
 
         for(int i = 0; i < prevLayer.getNeurons().size(); i++) {
-            double weight = prevLayer.getNeuron(i).getWeight(myIndex);
-            double input = i == 0 ? 1 : prevLayer.getNeuron(i).getOutput();
+            float weight = prevLayer.getNeuron(i).getWeight(myIndex);
+            float input = i == 0 ? 1 : prevLayer.getNeuron(i).getOutput();
             u += weight * input;
         }
 
         output = activationFunction(u);
     }
 
-    public double activationFunction(double u) {
+    public float activationFunction(float u) {
         // sigmoid funkcia - hyperbolicky tangens
 //        return tanh(Util.lambda * u);
-        return 1/(1+Math.exp( -(Util.lambda) * u));
+        double pow = Math.exp( -(Util.lambda) * u);
+        float res = (float) 1/(1+ (float) pow);
+//        float res = (float) 1/(1+Math.exp( -(Util.lambda) * u));
+        return res;
     }
 
     //SETTERS AND GETTERS
-    public void setOutput(double output) {
+    public void setOutput(float output) {
         this.output = output;
     }
 
-    public double getWeight(int index) {
+    public float getWeight(int index) {
         return weights[index];
     }
 
-    public double getOutput() {
+    public float getOutput() {
         return output;
     }
 
-    public void setDelta(double delta) {
+    public void setDelta(float delta) {
         this.delta = delta;
     }
 
-    public double getDelta() {
+    public float getDelta() {
         return delta;
     }
 
     public void updateWeightDelta(Layer prevLayer) {
         for(int n = 1; n < prevLayer.getNeurons().size(); n++) {
-            double deltaWeight = Util.micro * delta * prevLayer.getNeuron(n).getOutput();
+            float deltaWeight = Util.micro * delta * prevLayer.getNeuron(n).getOutput();
             prevLayer.getNeuron(n).setDeltaWeight(myIndex, deltaWeight);
             prevLayer.getNeuron(n).updateWeight(myIndex);
         }
     }
 
-    public void setDeltaWeight(int index, double deltaWeight) {
+    public void setDeltaWeight(int index, float deltaWeight) {
         deltaWeights[index] = deltaWeight;
     }
 
-    public void setWeight(int index, double weight) {
+    public void setWeight(int index, float weight) {
         weights[index] = weight;
     }
 

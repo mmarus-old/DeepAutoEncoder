@@ -3,7 +3,15 @@ package com.mycompany.app.NN;
 import com.mycompany.app.Data.Data;
 import com.mycompany.app.Data.Vector;
 import com.mycompany.app.util.Image;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,6 +20,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static java.lang.Math.sqrt;
 
@@ -24,11 +34,18 @@ public class Network implements Serializable {
     private static final long serialVersionUID = -4209177588765477305L;
     ArrayList<Layer> layers = new ArrayList<>();
     ArrayList<Integer> topology;
-    double outputError;
-    double totalError = 0;
-    double micro = 0.05;
+    float totalError = 0;
     int cycles = 10;
-    ArrayList<Double> expectedOutput;
+    float precision = 0.2f;
+    ArrayList<Float> expectedOutput;
+    List<Integer> indexes = new ArrayList<Integer>();
+
+    public float getOutputError() {
+        return outputError;
+    }
+
+    float outputError = 0;
+
 
 
     public void evaluateInput(Vector inputVals, Vector expectedOutput) {
@@ -38,7 +55,7 @@ public class Network implements Serializable {
         feedForward();
         calculateError();
 
-        System.out.println("Output: "+ getOutputLayer().getNeurons() + " error = " + totalError );
+        System.out.println("Error = " + totalError );
     }
 
     private Layer getOutputLayer() {
@@ -82,35 +99,60 @@ public class Network implements Serializable {
 //        }
 //    }
 
-    public void train(Data data) {
-        //TODO: skontrolovat velkost vektoru vs topology
+    public void train(Data data, HBox outputImgHBox) {
+        outputImgHBox.setSpacing(2);
+        indexes.clear();
+        for(int i = 0; i < data.getData().size(); i++) {
+            indexes.add(Integer.valueOf(i));
+        }
+
         int count = 0;
         totalError = 1;
-        while (totalError > 0.9 && count <= cycles) {
+        while (totalError > precision && count < cycles && !Thread.currentThread().isInterrupted()) {
             totalError = 0;
-            data.getData().forEach(vector -> {
-                addInput(vector.getValues());
-                addOutput(vector.getValues());
+            Collections.shuffle(indexes);
+            for(int index: indexes) {
+                addInput(data.getData().get(index).getValues());
+                addOutput(data.getData().get(index).getValues());
                 feedForward();
                 calculateError();
                 calculateDeltas();
                 backPropagation();
-            });
+                if(count % 100 == 0 && index <= 8) {
+                    BufferedImage img = getOutputAsImage(data.getWidth(), data.getHeight());
+                    BufferedImage newImage = new BufferedImage(data.getWidth()*5, data.getHeight()*5, img.getType());
+                    Graphics g = newImage.createGraphics();
+                    g.drawImage(img, 0, 0, data.getWidth()*5, data.getHeight()*5, null);
+                    g.dispose();
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(SwingFXUtils.toFXImage(newImage, null));
+                    Label label = new Label();
+                    label.setText("Err: "+String.valueOf(outputError));
 
-            if(count % 10 == 0)
+                    Platform.runLater(() -> {
+                            ((VBox)outputImgHBox.getChildren().get(index)).getChildren().set(0, imageView);
+                            ((VBox)outputImgHBox.getChildren().get(index)).getChildren().set(1, label);
+                    });
+                }
+            }
+
+            if(count % 10 == 0) {
                 System.out.println("cycle: " +count+" error: "+ String.format( "%.9f", totalError ) );
+                Network.save(this, "temporaryNetwork.file");
+            }
             count++;
         }
+        System.out.println("Done training");
     }
 
-    public void addInput(ArrayList<Double> values) {
+    public void addInput(ArrayList<Float> values) {
         getInputLayer().getNeuron(0).setOutput(1);
         for(int i = 1; i < getInputLayer().getNeurons().size(); i++) {
-            getInputLayer().getNeuron(i).setOutput(values.get(i-1).doubleValue());
+            getInputLayer().getNeuron(i).setOutput(values.get(i-1).floatValue());
         }
     }
 
-    public void addOutput(ArrayList<Double> values) {
+    public void addOutput(ArrayList<Float> values) {
         expectedOutput = values;
     }
 
@@ -122,23 +164,19 @@ public class Network implements Serializable {
                 currnetLayer.getNeurons().get(n).calculateOutput(prevLayer);
             }
         }
-
     }
 
     public void calculateError() {
         outputError = 0;
-        double difference;
-        double neurons = getOutputLayer().getNeurons().size();
+        float difference;
         for(int i = 1; i < getOutputLayer().getNeurons().size(); i++) {
-            double expected = getExpectedOutputValueAt(i);
-            double actual = getOutputValueAt(i);
+            float expected = getExpectedOutputValueAt(i);
+            float actual = getOutputValueAt(i);
             difference = expected - actual;
             outputError += 0.5 * difference * difference;
-            double delta = (difference) * Util.lambda * getOutputValueAt(i) * (1 - getOutputValueAt(i));
-//            double delta = Util.lambda * (1 - getOutputValueAt(i) * getOutputValueAt(i));
+            float delta = (difference) * Util.lambda * getOutputValueAt(i) * (1 - getOutputValueAt(i));
+//            float delta = Util.lambda * (1 - getOutputValueAt(i) * getOutputValueAt(i));
             getOutputLayer().getNeuron(i).setDelta(delta);
-
-            double deeelta = getOutputLayer().getNeuron(i).getDelta();
             int iiii = 1;
         }
         totalError += outputError;
@@ -149,7 +187,7 @@ public class Network implements Serializable {
             Layer currnetLayer = layers.get(l);
             Layer nextLayer = layers.get(l + 1);
             for (int n = 1; n < currnetLayer.getNeurons().size(); n++) {
-                double sum = 0.0;
+                float sum = 0.0f;
 
                 for (int i = 1; i < nextLayer.getNeurons().size(); i++) {
                     sum += nextLayer.getNeuron(i).getDelta() * currnetLayer.getNeuron(n).getWeight(i);
@@ -174,12 +212,12 @@ public class Network implements Serializable {
 
     }
 
-    private double getExpectedOutputValueAt(int index) {
+    private float getExpectedOutputValueAt(int index) {
         //-1 bcs there is not the bias here
-        return expectedOutput.get(index - 1 ).doubleValue();
+        return expectedOutput.get(index - 1 ).floatValue();
     }
 
-    public double getOutputValueAt(int index) {
+    public float getOutputValueAt(int index) {
         return getOutputLayer().getNeuron(index).getOutput();
     }
 
@@ -187,7 +225,7 @@ public class Network implements Serializable {
         return layers;
     }
 
-    public double getTotalError() {
+    public float getTotalError() {
         return totalError;
     }
 
@@ -226,8 +264,8 @@ public class Network implements Serializable {
         return net;
     }
 
-    public ArrayList<Double> getRealOutput() {
-        ArrayList<Double> output = new ArrayList<>();
+    public ArrayList<Float> getRealOutput() {
+        ArrayList<Float> output = new ArrayList<>();
 
         for ( Neuron neuron :getOutputLayer().getNeurons()) {
             output.add(neuron.output);
@@ -236,10 +274,12 @@ public class Network implements Serializable {
         return output;
     }
 
-    public BufferedImage getOutputAsImage() {
-        int side = (int) sqrt(getRealOutput().size());
-        return Image.getDoublesAsGrayImage(getRealOutput(), side, side);
+    public BufferedImage getOutputAsImage(int width, int height) {
+        return Image.getFloatsAsGrayImage(getRealOutput(), width, height);
     }
 
 
+    public void setPrecision(float precision) {
+        this.precision = precision;
+    }
 }

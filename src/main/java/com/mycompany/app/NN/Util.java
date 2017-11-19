@@ -9,14 +9,28 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by Marek Marusic <mmarusic@redhat.com> on 10/21/17.
  */
 public class Util {
-    public static double lambda = 1.0;
-    public static double micro = 0.5;
-    public static double randomDoubleBetween(double lowerBound, double upperBound) {
-        return ThreadLocalRandom.current().nextDouble(lowerBound, upperBound);
+    public static float lambda = 1.0f;
+    public static float micro = 0.1f;
+
+    public static float randomFloatBetween(float lowerBound, float upperBound) {
+        return (float) ThreadLocalRandom.current().nextDouble(lowerBound, upperBound);
     }
 
-    public static double randomIntBetween(int lowerBound, int upperBound) {
+    public static float randomIntBetween(int lowerBound, int upperBound) {
         return ThreadLocalRandom.current().nextInt(lowerBound, upperBound+1);
+    }
+
+    public static NetworkArrays createAndTrainArrays(Data data) {
+
+        ArrayList<Integer> topology = new ArrayList<>();
+        topology.add(Integer.valueOf(data.getData().get(0).getValues().size()));
+        topology.add(Integer.valueOf( data.getData().get(0).getValues().size() / 2));
+        topology.add(Integer.valueOf(data.getData().get(0).getValues().size()));
+
+        NetworkArrays net = new NetworkArrays(topology);
+        net.setCycles(300);
+        net.train(data);
+        return net;
     }
 
     public static Network createAndTrain(Data data) {
@@ -28,8 +42,8 @@ public class Util {
         topology.add(Integer.valueOf(data.getData().get(0).getValues().size()));
 
         Network net = new Network(topology);
-        net.setCycles(10000);
-        net.train(data);
+        net.setCycles(300);
+//        net.train(data);
         return net;
     }
 }
