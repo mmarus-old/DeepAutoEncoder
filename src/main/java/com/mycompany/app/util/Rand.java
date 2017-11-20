@@ -9,11 +9,15 @@ public class Rand {
     public static float lambda = 1.0f;
     public static float micro = 0.1f;
 
+    public static void setMicro(float m) {
+        micro = m;
+    }
+
     public static float randomFloatBetween(float lowerBound, float upperBound) {
         return (float) ThreadLocalRandom.current().nextDouble(lowerBound, upperBound);
     }
 
-    public static float randomIntBetween(int lowerBound, int upperBound) {
+    public static int randomIntBetween(int lowerBound, int upperBound) {
         return ThreadLocalRandom.current().nextInt(lowerBound, upperBound+1);
     }
 }

@@ -113,8 +113,13 @@ public class Network implements Serializable {
             }
 
             if(count % 10 == 0) {
-                System.out.println("cycle: " +count+" error: "+ String.format( "%.9f", totalError ) );
+                System.out.println("cycle: " +count+". Error: "+ String.format( "%.9f", totalError ) );
                 Network.save(this, "temporaryNetwork.file");
+
+                Label totalErrNum = new Label();
+                totalErrNum.setText("cycle: " +count+" error: "+ String.format( "%.9f", totalError ) );
+
+                Platform.runLater(() -> outputImgHBox.getChildren().set(data.getData().size()+1, totalErrNum));
             }
             count++;
         }

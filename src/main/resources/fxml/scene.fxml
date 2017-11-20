@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -24,7 +25,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About DeepAutoEncoder" />
+            <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About DeepAutoEncoder" />
           </items>
         </Menu>
       </menus>
@@ -112,6 +113,8 @@
                                       <buttons>
                                         <Button contentDisplay="LEFT" mnemonicParsing="false" onAction="#onLoadImage" text="Load Image" ButtonBar.buttonData="LEFT" />
                                           <Button fx:id="SaveResultButt" disable="true" mnemonicParsing="false" onAction="#onSaveResult" text="Save Result" ButtonBar.buttonData="LEFT" />
+                                          <Label fx:id="noiseLabel" disable="true" text="Noise 0%:" />
+                                          <Slider fx:id="noiseSlider" disable="true" />
                                       </buttons>
                                     </ButtonBar>
                                     <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">

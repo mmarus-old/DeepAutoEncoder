@@ -20,6 +20,8 @@ public class NetworkTest {
 
     @Test
     public void calculateOutput() {
+        Rand.setMicro(0.5f);
+
         ArrayList<Float> inputVals = new ArrayList<>(Arrays.asList(Float.valueOf(0.05f), Float.valueOf(0.1f)));
         ArrayList<Float> outputVals = new ArrayList<>(Arrays.asList(Float.valueOf(0.01f), Float.valueOf(0.99f)));
 
